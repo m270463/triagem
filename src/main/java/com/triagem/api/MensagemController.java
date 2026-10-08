@@ -28,7 +28,7 @@ public class MensagemController {
         m.setCanal(req.canal());
         m.setCliente(req.cliente());
         m.setTexto(req.texto());
-        return m;
+        return repositorio.save(m);
     }
 
     @GetMapping
