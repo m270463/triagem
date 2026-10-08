@@ -16,9 +16,11 @@ import jakarta.validation.Valid;
 @RequestMapping ("/mensagens")
 public class MensagemController {
     private final MensagemRepository repositorio;
+    private final Classificador classificador;
 
-    public MensagemController(MensagemRepository repositorio){
+    public MensagemController(MensagemRepository repositorio, Classificador classificador){
         this.repositorio = repositorio;
+        this.classificador = classificador;
     }
     
     @PostMapping
@@ -28,6 +30,11 @@ public class MensagemController {
         m.setCanal(req.canal());
         m.setCliente(req.cliente());
         m.setTexto(req.texto());
+        Classificacao c = classificador.classificar(req.texto());
+        m.setPrioridade(c.prioridade());
+        m.setSentimento(c.sentimento());
+        m.setCategoria(c.categoria());
+        m.setClassificada(true);
         return repositorio.save(m);
     }
 
