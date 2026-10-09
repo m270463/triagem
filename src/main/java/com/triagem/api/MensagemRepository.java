@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface MensagemRepository extends JpaRepository<Mensagem, Long>{
-    @Query("""
+     @Query("""
         SELECT m FROM Mensagem m
         WHERE (:status IS NULL OR m.status = :status)
           AND (:prioridade IS NULL OR m.prioridade = :prioridade)
