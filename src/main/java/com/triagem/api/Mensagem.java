@@ -30,6 +30,8 @@ public class Mensagem {
     private boolean classificada;
     private String status = "novo";
     private LocalDateTime criadoEm = LocalDateTime.now();
+    private String sugestaoResposta;
+    private String resumo;
 
     
     public Long getId() {
@@ -91,6 +93,18 @@ public class Mensagem {
     }
     public void setCriadoEm(LocalDateTime criadoEm) {
         this.criadoEm = criadoEm;
+    }
+    public String getSugestaoResposta() {
+        return sugestaoResposta;
+    }
+    public String getResumo() {
+        return resumo;
+    }
+    public void setSugestaoResposta(String sugestaoResposta) {
+        this.sugestaoResposta = sugestaoResposta;
+    }
+    public void setResumo(String resumo) {
+        this.resumo = resumo;
     }
     
 

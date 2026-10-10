@@ -38,6 +38,8 @@ public class MensagemController {
         m.setPrioridade(c.prioridade());
         m.setSentimento(c.sentimento());
         m.setCategoria(c.categoria());
+        m.setSugestaoResposta(c.sugestaoResposta());
+        m.setResumo(c.resumo());
         m.setClassificada(true);
         return repositorio.save(m);
     }
@@ -47,6 +49,8 @@ public class MensagemController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false) String prioridade,
             @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) String resumo,
+            @RequestParam(required = false) String sugestaoResposta,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
 
@@ -56,5 +60,4 @@ public class MensagemController {
         Page<Mensagem> resultado = repositorio.buscar(status, prioridade, categoria, pageable);
         return new PagedModel<>(resultado);
     }
-
 }
