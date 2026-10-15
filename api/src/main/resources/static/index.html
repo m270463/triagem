@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Triagem de mensagens</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 640px; margin: 2rem auto; padding: 0 1rem; color: #1a1a1a; }
+  h1 { font-size: 1.4rem; }
+  label { display: block; margin: .8rem 0 .2rem; font-size: .9rem; color: #555; }
+  textarea, input, select { width: 100%; padding: .5rem; font: inherit; box-sizing: border-box; }
+  textarea { min-height: 110px; }
+  button { margin-top: 1rem; padding: .6rem 1.2rem; font: inherit; cursor: pointer; }
+  button:disabled { opacity: .6; cursor: wait; }
+  #resultado { margin-top: 1.5rem; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; display: none; }
+  .badges { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: .8rem; }
+  .badge { padding: .2rem .6rem; border-radius: 999px; font-size: .85rem; background: #e8eefc; }
+  .p-urgente { background: #f8c9c9; } .p-alta { background: #fbdcb8; }
+  .p-media { background: #fbf0b8; }   .p-baixa { background: #cdeccd; }
+  .s-positivo { background: #cdeccd; } .s-neutro { background: #e3e3e3; } .s-negativo { background: #f8c9c9; }
+  .campo { margin: .6rem 0; }
+  .campo b { display: block; font-size: .8rem; color: #666; text-transform: uppercase; }
+  .aviso { color: #8a4b00; }
+  .erro { color: #a00000; }
+</style>
+</head>
+<body>
+<h1>Triagem de mensagens com IA</h1>
+
+<label for="canal">Canal</label>
+<select id="canal"><option>whatsapp</option><option>email</option><option>chat</option></select>
+
+<label for="cliente">Cliente</label>
+<input id="cliente" value="cliente_demo">
+
+<label for="texto">Mensagem do cliente</label>
+<textarea id="texto" maxlength="2000" placeholder="Ex.: Fui cobrado duas vezes no cartão e ninguém me responde há 3 dias!!"></textarea>
+
+<button id="enviar">Classificar</button>
+
+<div id="resultado"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+
+function badge(texto, classe) {
+  const el = document.createElement("span");
+  el.className = "badge " + classe;
+  el.textContent = texto;               // textContent: evita XSS
+  return el;
+}
+
+function campo(titulo, valor) {
+  const div = document.createElement("div");
+  div.className = "campo";
+  const b = document.createElement("b");
+  b.textContent = titulo;
+  const p = document.createElement("span");
+  p.textContent = valor;
+  div.append(b, p);
+  return div;
+}
+
+function mostrar(...nos) {
+  const box = $("resultado");
+  box.replaceChildren(...nos);
+  box.style.display = "block";
+}
+
+function mensagem(texto, classe) {
+  const p = document.createElement("p");
+  p.className = classe;
+  p.textContent = texto;
+  return p;
+}
+
+$("enviar").addEventListener("click", async () => {
+  const texto = $("texto").value.trim();
+  if (!texto) { mostrar(mensagem("Escreva uma mensagem.", "erro")); return; }
+
+  const btn = $("enviar");
+  btn.disabled = true;
+  btn.textContent = "Classificando...";
+  try {
+    const res = await fetch("/mensagens", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ canal: $("canal").value, cliente: $("cliente").value.trim(), texto })
+    });
+    if (!res.ok) { mostrar(mensagem("Erro " + res.status + " ao enviar.", "erro")); return; }
+    const m = await res.json();
+
+    if (!m.classificada) {
+      mostrar(mensagem("Mensagem salva, mas a IA não conseguiu classificar agora.", "aviso"));
+      return;
+    }
+    const badges = document.createElement("div");
+    badges.className = "badges";
+    badges.append(
+      badge(m.categoria, ""),
+      badge("prioridade: " + m.prioridade, "p-" + m.prioridade),
+      badge(m.sentimento, "s-" + m.sentimento)
+    );
+    mostrar(badges, campo("Resumo", m.resumo), campo("Sugestão de resposta", m.sugestaoResposta));
+  } catch (e) {
+    mostrar(mensagem("Não foi possível falar com o servidor.", "erro"));
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Classificar";
+  }
+});
+</script>
+</body>
+</html>
