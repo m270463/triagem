@@ -14,7 +14,7 @@ public class ClassificadorMock implements Classificador{
         if (t.contains("cancelar")) {
             return new Classificacao("cancelamento", "alta", "negativo","resumo","sugestao");
         }
-        
+
         if (t.contains("cobrado") || t.contains("fatura") || t.contains("boleto")) {
             return new Classificacao("cobranca", "media", "negativo","resumo","sugestao");
         }
@@ -25,5 +25,4 @@ public class ClassificadorMock implements Classificador{
 
         return new Classificacao("suporte", "media", "neutro","resumo","sugestao");
     }
-    
 }
