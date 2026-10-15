@@ -34,13 +34,17 @@ public class MensagemController {
         m.setCanal(req.canal());
         m.setCliente(req.cliente());
         m.setTexto(req.texto());
-        Classificacao c = classificador.classificar(req.texto());
-        m.setPrioridade(c.prioridade());
-        m.setSentimento(c.sentimento());
-        m.setCategoria(c.categoria());
-        m.setSugestaoResposta(c.sugestaoResposta());
-        m.setResumo(c.resumo());
-        m.setClassificada(true);
+        try {
+            Classificacao c = classificador.classificar(req.texto());
+            m.setCategoria(c.categoria());
+            m.setPrioridade(c.prioridade());
+            m.setSentimento(c.sentimento());
+            m.setResumo(c.resumo());
+            m.setSugestaoResposta(c.sugestaoResposta());
+            m.setClassificada(true);
+        } catch (RuntimeException e) {
+            m.setClassificada(false);   
+        }
         return repositorio.save(m);
     }
 
