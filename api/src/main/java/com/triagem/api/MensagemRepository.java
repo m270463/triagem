@@ -15,7 +15,7 @@ public interface MensagemRepository extends JpaRepository<Mensagem, Long>{
         """)
     Page<Mensagem> buscar(@Param("status") String status,
                           @Param("prioridade") String prioridade,
-                          @Param("categoria") String categoria,
+                          @Param("categoria") String categoria, 
                           Pageable pageable);
 
 
