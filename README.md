@@ -202,8 +202,8 @@ Um projeto com três serviços a partir deste repositório:
 | Serviço | Root Directory | Observações |
 |---|---|---|
 | `Postgres` | — | banco gerenciado pelo Railway |
-| `ia` | `/ia` | comando de início `uvicorn main:app --host 0.0.0.0 --port 8000`; variáveis `IA_MODO` e `GEMINI_API_KEY`; sem domínio público |
-| `api` | `/api` | variáveis `LINK_DB`, `USER_DB` e `SENHA_DB` (referências ao Postgres), `CLASSIFICADOR_MODO=http` e `CLASSIFICADOR_URL=http://ia.railway.internal:8000`; domínio público |
+| `ia` | `/ia` 
+| `api` | `/api`
 
 ## Estrutura do repositório
 
@@ -217,17 +217,5 @@ triagem/
 
 ## Como usei IA no desenvolvimento
 
-<!-- TODO: revise esta seção e ajuste para refletir exatamente o que você fez. -->
-
 Usei o Claude como assistente durante o projeto: para tirar dúvidas de conceitos (JPA, paginação, FastAPI, integração entre serviços), revisar o meu código, apoiar o diagnóstico de erros de configuração e de deploy, e gerar o conjunto de 25 mensagens de teste. Revisei e testei o que foi sugerido antes de usar.
 
-## Próximos passos
-
-- [ ] Testes automatizados (JUnit e Mockito) e CI com GitHub Actions
-- [ ] Autenticação e limite de requisições na API pública
-- [ ] Busca por texto nas mensagens
-- [ ] Atualizar o `status` das mensagens (por exemplo, "em atendimento" e "resolvido")
-
-## Autor
-
-Matheus Bittencourt Assis, estudante de Engenharia da Computação na Unicamp. [LinkedIn](https://linkedin.com/in/matheus-bittencourt-assis)
